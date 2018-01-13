@@ -1,0 +1,16 @@
+--更新jar包
+create resource jar E:\ODPS-jar\changesanalysis.jar -f;
+
+
+--更新函数
+create function changeanalysisudtf as com.shuta.dm.changesanalysis.ChangeAnalysisUDTF using changesanalysis.jar,json-20170516.jar -f;
+
+
+drop table if exists temp_leeon_changes_analysis_result;
+create table temp_leeon_changes_analysis_result as 
+select 
+changeanalysisudtf(eid,alt_records)  as (eid,alt_records_analysis)
+from
+temp_leeon_changes_ots_internal where eid is not null and alt_records is not null;
+
+
